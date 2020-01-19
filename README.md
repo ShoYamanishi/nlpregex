@@ -1,2 +1,2 @@
 # nlpregex
-Regular Language representation converter, visualizer, and decoder &amp; acceptor
+Regular Language Representation Converter, Visualizer, and Decoder &amp; Acceptor
