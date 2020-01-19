@@ -1,0 +1,2 @@
+<nt01> : ( t01 | t02 | <nt02> ) + ;
+<nt02> : abc def (ghi xyz)?;
