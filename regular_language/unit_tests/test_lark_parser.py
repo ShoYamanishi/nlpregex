@@ -2078,6 +2078,42 @@ class test_lark_parser( unittest.TestCase ):
 #        fst01.draw('tmp', show_out_token = True, view_now = True, out_format = "pdf" )
 
 
+    def test_lines_0011(self):
+
+        spec01 = '''
+            ( T01 [ token03 token04 ] )
+            ( N01 [ token03 token04 ] )
+            ( [ token02 token01 ] ( T01 ) [ token03 token04 ] )
+            ( T01 [ token03 token04 ] )
+            ( [ token02 token01 ] ( ( T01 [ token07 token08 ] ) ) [ token03 token04 ] )
+            ( [ token02 token01 ] ( ( T01 [ token07 token08 ] ) ( N02 [ token11 token12 ] ) ) [ token03 token04 ] )
+            ( [ token02 token01 ] ( T01 [ token07 token08 ] ) [ token03 token04 ] )
+            ( [ token02 token01 ] ( T02 [ token11 token12 ] ) [ token03 token04 ] )
+            ( __EPS__ [ token03 token04 ] )
+            ( [ token02 token01 ] ( T01 [ token07 token08 ] ) [ token03 token04 ] )
+            ( [ token02 token01 ] ( T01{ 0, 3 } ) [ token03 token04 ] )
+            ( [ token02 token01 ] ( T01{ 2, 7 } ) [ token03 token04 ] )
+            ( [ token02 token01 ] ( ( T01 [ token07 token08 ] ){ 0, 3 } ) [ token03 token04 ] )
+            ( [ token02 token01 ] ( ( T01 [ token07 token08 ] ){ 2, 7 } ) [ token03 token04 ] )
+            ( [ token02 token01 ] ( T01* ) [ token03 token04 ] )
+            ( [ token02 token01 ] ( ( T01 [ token07 token08 ] )* ) [ token03 token04 ] )
+            ( [ token02 token01 ] ( T01+ ) [ token03 token04 ] )
+            ( [ token02 token01 ] ( ( T01 [ token07 token08 ] )+ ) [ token03 token04 ] )
+        '''
+
+        spec_expected = '( t01 t02 <nt02> )+'
+
+        parser = nlpregex.regular_language.lark_parser.LarkParser()
+        ast01   = parser.parse_lines( spec01 )
+        str01 = ast01.emit_formatted_text(80, 4, True)
+#        self.assertEqual( str01, spec_expected )
+#        ast01.draw('tmp_ast', True, 'pdf' )
+        fst01 = ast01.generate_fst(True)
+#        fst01.draw('tmp_fst', show_out_token = True, view_now = True, out_format = "pdf" )
+        fst01 = ast01.generate_fst(True)
+        dfa01 = DFA_from_NFA(fst01)
+#        dfa01.draw('tmp_fst', show_out_token = True, view_now = True, out_format = "pdf" )
+
 
 if __name__ == '__main__':
     unittest.main()

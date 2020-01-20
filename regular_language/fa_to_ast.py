@@ -111,32 +111,32 @@ class FAtoAST():
         reducer01 = CommonRepetitionReducer( forrest )
         reducer01.reduce()
 
-        # 2. Reduce common subtrees
+        # 3. Reduce common subtrees
         if reduceCommonSubtree:
             reducer02 = CommonSubtreeReducer( forrest, self.min_num_occurrences, self.min_num_terms )
             reducer02.set_balanced_tokens( self.symManager.sse_common_expression_reducer_balanced_pairs() )
             reducer02.reduce()
 
-        # 3. Reduce common union subexpressions
+        # 4. Reduce common union subexpressions
         if reduceCommonUnionSubexpression:
             reducer03 = CommonUnionSubexpressionReducer( forrest, self.min_num_occurrences, self.min_num_terms )
             reducer03.set_balanced_tokens( self.symManager.sse_common_expression_reducer_balanced_pairs() )
             reducer03.reduce()
 
-        # 4. Reduce common substrings
+        # 5. Reduce common substrings
         if reduceCommonSubstring:
             reducer04 = CommonSubstringReducer( forrest, self.min_num_occurrences, self.min_num_terms )
             reducer04.set_balanced_tokens( self.symManager.sse_common_expression_reducer_balanced_pairs() )
             reducer04.reduce()
 
-        # 5. Modify sseAST for balanced tokens.
+        # 6. Modify sseAST for balanced tokens.
         forrest.balance_trees_for_out_tokens( self.symManager.sse_common_expression_reducer_balanced_pairs() )
 
-        # 6. Find all the nonterminals and generate proper symbols.
+        # 7. Find all the nonterminals and generate proper symbols.
         nonterminals = forrest.find_nonterminals()
         self.symManager.handle_nonterminals( nonterminals )
 
-        # 7. Convert sseASTs to ASTs
+        # 8. Convert sseASTs to ASTs
         self.construct_ASTs(forrest)
 
         return forrest;

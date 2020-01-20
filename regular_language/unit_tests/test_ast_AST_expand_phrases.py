@@ -60,7 +60,7 @@ class test_ast_AST_expand_phrases( unittest.TestCase ):
     def test_0003a(self):
 
         spec01           = 'T_T01'
-        string_expected  = 'T01 [ token03 token04 ]'
+        string_expected  = '( T01 [ token03 token04 ] )'
         ast01    = self.construct_ast_from_spec(spec01)
         node_001 = self.helper.get_node(ast01, 'T_T01')
         node_001.append_out_token_pre ('token01')
@@ -88,7 +88,7 @@ class test_ast_AST_expand_phrases( unittest.TestCase ):
     def test_0004a(self):
 
         spec01           = 'N_N01'
-        string_expected  = 'N01 [ token03 token04 ]'
+        string_expected  = '( N01 [ token03 token04 ] )'
         ast01 = self.construct_ast_from_spec(spec01)
         node_001 = self.helper.get_node(ast01, 'N_N01')
         node_001.append_out_token_pre ('token01')
@@ -114,7 +114,7 @@ class test_ast_AST_expand_phrases( unittest.TestCase ):
     def test_0005a(self):
 
         spec01           = 'S_S01:T_T01'
-        string_expected  = '[ token02 token01 ] T01 [ token03 token04 ]'
+        string_expected  = '( [ token02 token01 ] ( T01 ) [ token03 token04 ] )'
         ast01 = self.construct_ast_from_spec(spec01)
 
         node_001 = self.helper.get_node(ast01, 'S_S01')
@@ -131,7 +131,7 @@ class test_ast_AST_expand_phrases( unittest.TestCase ):
     def test_0005b(self):
 
         spec01           = 'S_S01:T_T01'
-        string_expected  = 'T01 [ token03 token04 ]'
+        string_expected  = '( T01 [ token03 token04 ] )'
         ast01 = self.construct_ast_from_spec(spec01)
 
         node_001 = self.helper.get_node(ast01, 'T_T01')
@@ -148,7 +148,7 @@ class test_ast_AST_expand_phrases( unittest.TestCase ):
     def test_0005c(self):
 
         spec01           = 'S_S01:T_T01'
-        string_expected  = '[ token02 token01 ] T01 [ token07 token08 ] [ token03 token04 ]'
+        string_expected  = '( [ token02 token01 ] ( ( T01 [ token07 token08 ] ) ) [ token03 token04 ] )'
         ast01 = self.construct_ast_from_spec(spec01)
 
         node_001 = self.helper.get_node(ast01, 'S_S01')
@@ -165,6 +165,7 @@ class test_ast_AST_expand_phrases( unittest.TestCase ):
 
         list01 = ast01.expand_phrases(True)
         str01 = '\n'.join(list01)
+
         self.assertEqual( self.compare_specs(str01, string_expected), True )
 
 
@@ -181,9 +182,9 @@ class test_ast_AST_expand_phrases( unittest.TestCase ):
     def test_0006a(self):
 
         spec01           = 'S_S01:T_T01 N_N02'
-        string_expected  = '[ token02 token01 ] T01 [ token07 token08 ] N02 [ token11 token12 ] [ token03 token04 ]'
-        ast01 = self.construct_ast_from_spec(spec01)
+        string_expected  = '( [ token02 token01 ] ( ( T01 [ token07 token08 ] ) ( N02 [ token11 token12 ] ) ) [ token03 token04 ] )'
 
+        ast01 = self.construct_ast_from_spec(spec01)
 
         node_001 = self.helper.get_node(ast01, 'S_S01')
         node_001.append_out_token_pre ('token01')
@@ -222,7 +223,7 @@ class test_ast_AST_expand_phrases( unittest.TestCase ):
     def test_0007a(self):
 
         spec01           = '|_U01:T_T01'
-        string_expected  = '[ token02 token01 ] T01 [ token03 token04 ]'
+        string_expected  = '( [ token02 token01 ] T01 [ token03 token04 ] )'
         ast01 = self.construct_ast_from_spec(spec01)
 
         node_001 = self.helper.get_node(ast01, '|_U01')
@@ -240,7 +241,7 @@ class test_ast_AST_expand_phrases( unittest.TestCase ):
     def test_0007b(self):
 
         spec01           = '|_U01:T_T01'
-        string_expected  = 'T01 [ token03 token04 ]'
+        string_expected  = '( T01 [ token03 token04 ] )'
         ast01 = self.construct_ast_from_spec(spec01)
 
         node_001 = self.helper.get_node(ast01, 'T_T01')
@@ -258,7 +259,8 @@ class test_ast_AST_expand_phrases( unittest.TestCase ):
     def test_0007c(self):
 
         spec01           = '|_U01:T_T01'
-        string_expected  = '[ token02 token01 ] T01 [ token07 token08 ] [ token03 token04 ]'
+        string_expected  = '( [ token02 token01 ] ( T01 [ token07 token08 ] ) [ token03 token04 ] )'
+                            
         ast01 = self.construct_ast_from_spec(spec01)
 
         node_001 = self.helper.get_node(ast01, '|_U01')
@@ -295,8 +297,8 @@ class test_ast_AST_expand_phrases( unittest.TestCase ):
 
         spec01           = '|_U01:T_T01 T_T02'
         string_expected  = '''
-            [ token02 token01 ] T01 [ token03 token04 ]
-            [ token02 token01 ] T02 [ token03 token04 ]
+            ( [ token02 token01 ] T01 [ token03 token04 ] )
+            ( [ token02 token01 ] T02 [ token03 token04 ] )
         '''
         ast01 = self.construct_ast_from_spec(spec01)
 
@@ -308,16 +310,21 @@ class test_ast_AST_expand_phrases( unittest.TestCase ):
 
         list01 = ast01.expand_phrases(True)
         str01 = '\n'.join(list01)
+
+
+
         self.assertEqual( self.compare_specs(str01, string_expected), True )
 
 
-    def test_0008a(self):
+    def test_0008b(self):
 
         spec01           = '|_U01:T_T01 T_T02'
         string_expected  = '''
-            [ token02 token01 ] T01 [ token07 token08 ] [ token03 token04 ]
-            [ token02 token01 ] T02 [ token11 token12 ] [ token03 token04 ]
+            ( [ token02 token01 ] ( T01 [ token07 token08 ] ) [ token03 token04 ] )
+            ( [ token02 token01 ] ( T02 [ token11 token12 ] ) [ token03 token04 ] )
         '''
+
+
         ast01 = self.construct_ast_from_spec(spec01)
 
         node_001 = self.helper.get_node(ast01, '|_U01')
@@ -341,6 +348,7 @@ class test_ast_AST_expand_phrases( unittest.TestCase ):
 
         list01 = ast01.expand_phrases(True)
         str01 = '\n'.join(list01)
+
         self.assertEqual( self.compare_specs(str01, string_expected), True )
 
 
@@ -375,8 +383,8 @@ class test_ast_AST_expand_phrases( unittest.TestCase ):
 
         spec01           = '?_R01:T_T01'
         string_expected  = '''
-            [ token02 token01 ] [ token03 token04 ]
-            [ token02 token01 ] T01 [ token03 token04 ]
+            ( [ token02 token01 ] __EPS__ [ token03 token04 ] )
+            ( [ token02 token01 ] T01 [ token03 token04 ] )
         '''
         ast01 = self.construct_ast_from_spec(spec01)
 
@@ -395,8 +403,8 @@ class test_ast_AST_expand_phrases( unittest.TestCase ):
 
         spec01           = '?_R01:T_T01'
         string_expected  = '''
-            [ token02 token01 ] [ token03 token04 ]
-            [ token02 token01 ] T01 [ token07 token08 ] [ token03 token04 ]
+            ( [ token02 token01 ] __EPS__ [ token03 token04 ] )
+            ( [ token02 token01 ] ( T01 [ token07 token08 ] ) [ token03 token04 ] )
         '''
         ast01 = self.construct_ast_from_spec(spec01)
 
@@ -414,6 +422,7 @@ class test_ast_AST_expand_phrases( unittest.TestCase ):
 
         list01 = ast01.expand_phrases(True)
         str01 = '\n'.join(list01)
+
         self.assertEqual( self.compare_specs(str01, string_expected), True )
 
 
@@ -433,7 +442,7 @@ class test_ast_AST_expand_phrases( unittest.TestCase ):
 
         spec01           = '{0,3}_R01:T_T01'
         string_expected  = '''
-            [ token02 token01 ] ( T01{ 0, 3 } ) [ token03 token04 ]
+            ( [ token02 token01 ] ( T01{ 0, 3 } ) [ token03 token04 ] )
         '''
         ast01 = self.construct_ast_from_spec(spec01)
 
@@ -445,6 +454,7 @@ class test_ast_AST_expand_phrases( unittest.TestCase ):
 
         list01 = ast01.expand_phrases(True)
         str01 = '\n'.join(list01)
+
         self.assertEqual( self.compare_specs(str01, string_expected), True )
 
 
@@ -452,7 +462,7 @@ class test_ast_AST_expand_phrases( unittest.TestCase ):
 
         spec01           = '{0,3}_R01:T_T01'
         string_expected  = '''
-            [ token02 token01 ] ( ( T01 [ token07 token08 ] ){ 0, 3 } ) [ token03 token04 ]
+            ( [ token02 token01 ] ( ( T01 [ token07 token08 ] ){ 0, 3 } ) [ token03 token04 ] )
         '''
         ast01 = self.construct_ast_from_spec(spec01)
 
@@ -470,6 +480,7 @@ class test_ast_AST_expand_phrases( unittest.TestCase ):
 
         list01 = ast01.expand_phrases(True)
         str01 = '\n'.join(list01)
+
         self.assertEqual( self.compare_specs(str01, string_expected), True )
 
 
@@ -489,7 +500,7 @@ class test_ast_AST_expand_phrases( unittest.TestCase ):
 
         spec01           = '{2,7}_R01:T_T01'
         string_expected  = '''
-            [ token02 token01 ] ( T01{ 2, 7 } ) [ token03 token04 ]
+            ( [ token02 token01 ] ( T01{ 2, 7 } ) [ token03 token04 ] )
         '''
         ast01 = self.construct_ast_from_spec(spec01)
 
@@ -501,6 +512,8 @@ class test_ast_AST_expand_phrases( unittest.TestCase ):
 
         list01 = ast01.expand_phrases(True)
         str01 = '\n'.join(list01)
+
+
         self.assertEqual( self.compare_specs(str01, string_expected), True )
 
 
@@ -508,7 +521,7 @@ class test_ast_AST_expand_phrases( unittest.TestCase ):
 
         spec01           = '{2,7}_R01:T_T01'
         string_expected  = '''
-            [ token02 token01 ] ( ( T01 [ token07 token08 ] ){ 2, 7 } ) [ token03 token04 ]
+            ( [ token02 token01 ] ( ( T01 [ token07 token08 ] ){ 2, 7 } ) [ token03 token04 ] )
         '''
         ast01 = self.construct_ast_from_spec(spec01)
 
@@ -545,7 +558,7 @@ class test_ast_AST_expand_phrases( unittest.TestCase ):
 
         spec01           = '*_R01:T_T01'
         string_expected  = '''
-            [ token02 token01 ] ( T01* ) [ token03 token04 ]
+            ( [ token02 token01 ] ( T01* ) [ token03 token04 ] )
         '''
         ast01 = self.construct_ast_from_spec(spec01)
 
@@ -557,6 +570,8 @@ class test_ast_AST_expand_phrases( unittest.TestCase ):
 
         list01 = ast01.expand_phrases(True)
         str01 = '\n'.join(list01)
+
+
         self.assertEqual( self.compare_specs(str01, string_expected), True )
 
 
@@ -564,7 +579,7 @@ class test_ast_AST_expand_phrases( unittest.TestCase ):
 
         spec01           = '*_R01:T_T01'
         string_expected  = '''
-            [ token02 token01 ] ( ( T01 [ token07 token08 ] )* ) [ token03 token04 ]
+            ( [ token02 token01 ] ( ( T01 [ token07 token08 ] )* ) [ token03 token04 ] )
         '''
         ast01 = self.construct_ast_from_spec(spec01)
 
@@ -582,6 +597,8 @@ class test_ast_AST_expand_phrases( unittest.TestCase ):
 
         list01 = ast01.expand_phrases(True)
         str01 = '\n'.join(list01)
+
+
         self.assertEqual( self.compare_specs(str01, string_expected), True )
 
 
@@ -602,7 +619,7 @@ class test_ast_AST_expand_phrases( unittest.TestCase ):
 
         spec01           = '+_R01:T_T01'
         string_expected  = '''
-            [ token02 token01 ] ( T01+ ) [ token03 token04 ]
+            ( [ token02 token01 ] ( T01+ ) [ token03 token04 ] )
         '''
         ast01 = self.construct_ast_from_spec(spec01)
 
@@ -614,6 +631,7 @@ class test_ast_AST_expand_phrases( unittest.TestCase ):
 
         list01 = ast01.expand_phrases(True)
         str01 = '\n'.join(list01)
+
         self.assertEqual( self.compare_specs(str01, string_expected), True )
 
 
@@ -621,7 +639,7 @@ class test_ast_AST_expand_phrases( unittest.TestCase ):
 
         spec01           = '+_R01:T_T01'
         string_expected  = '''
-            [ token02 token01 ] ( ( T01 [ token07 token08 ] )+ ) [ token03 token04 ]
+            ( [ token02 token01 ] ( ( T01 [ token07 token08 ] )+ ) [ token03 token04 ] )
         '''
         ast01 = self.construct_ast_from_spec(spec01)
 

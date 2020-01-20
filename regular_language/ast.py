@@ -1680,6 +1680,7 @@ class AST(nlpregex.abs_graph.graph.RootedTree):
             for c in children:
                 phrases = cross_product( phrases, self.visit_and_expand_phrases( c,  gen_attributes ), ' ' )
             main_list = phrases
+            need_paren_for_attr = True
 
         elif n.ast_node_type == 'terminal':
             main_list = [ n.content ]
@@ -1719,36 +1720,36 @@ class AST(nlpregex.abs_graph.graph.RootedTree):
             updated_main_list = []
             if prologue != '':
                 if epilogue != '':
+
                     for m in main_list:
                         if m != '':
                             if need_paren_for_attr:
-                                updated_main_list.append( prologue + ' ( ' + m + ' ) ' + epilogue )
+                                updated_main_list.append( '( ' + prologue + ' ( ' + m + ' ) ' + epilogue + ' )' )
                             else:
-                                updated_main_list.append( prologue + ' ' + m + ' ' + epilogue )
+                                updated_main_list.append( '( ' + prologue + ' ' + m + ' ' + epilogue + ' )' )
                         else:
-                            updated_main_list.append( prologue + ' ' + epilogue )
+                            updated_main_list.append( '( ' + prologue + ' __EPS__ ' + epilogue  + ' )' )
                 else:
 
                     for m in main_list:
                         if m != '':
                             if need_paren_for_attr:
-                                updated_main_list.append( prologue + ' ( ' + m  + ' )')
+                                updated_main_list.append( '( ' + prologue + ' ( ' + m  + ' ) )' )
                             else:
-                                updated_main_list.append( prologue + ' ' + m )
+                                updated_main_list.append( '( ' + prologue + ' ' + m + ' )' )
                         else:
-                            updated_main_list.append( prologue )
-
+                            updated_main_list.append( '( ' + prologue + ' __EPS__ )' )
 
             else:           
                 if epilogue != '':
                     for m in main_list:
                         if m != '':
                             if need_paren_for_attr:
-                                updated_main_list.append( '( ' + m + ' ) ' + epilogue )
+                                updated_main_list.append( '( ( ' + m + ' ) ' + epilogue + ' )' )
                             else:
-                                updated_main_list.append( m + ' ' + epilogue )
+                                updated_main_list.append( '( ' + m + ' ' + epilogue + ' )' )
                         else:
-                            updated_main_list.append( epilogue )    
+                            updated_main_list.append( '( __EPS__ ' + epilogue  + ' )' )
                 else:
                     for m in main_list:
                         updated_main_list.append( m )
@@ -1838,8 +1839,11 @@ class AST(nlpregex.abs_graph.graph.RootedTree):
 
     # @brief generate FST
     #        finite repeat must be expanded into union
+    #
     # @param generate_out_tokens
-    def generate_fst ( self, generate_out_tokens=True ):
+    #
+    # @param generate_balancedids
+    def generate_fst ( self, generate_out_tokens = True ):
 
         if self.root:
             self.node_attribute_id_next = 0
@@ -1914,7 +1918,6 @@ class AST(nlpregex.abs_graph.graph.RootedTree):
 
                 marker_pre  = '[PRE {:d}]'.format(self.node_attribute_id_next)
                 marker_post = '[POST {:d}]'.format(self.node_attribute_id_next)
-
                 self.node_attribute_id_next += 1
 
                 serial_graphs = []
