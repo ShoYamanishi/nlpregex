@@ -1,4 +1,4 @@
-# nlpregex
+# nlpregex READEME UNDER DEVELOPMENT SOON TO BE READY
 Regular Language Representation Converter, Visualizer, and Decoder &amp; Acceptor
 
 <a href="docs/banner.png"> <img src="docs/banner.png"></a>
@@ -22,6 +22,7 @@ The regular expression is augumented to include the output attributes after a te
 before and after a group enclosed by '(' and ')' in paires.
 The attributes are transferred to the output tokens of FA and it is used for the decoder as FST.
 
+# Conversion from FA to AST
 The technical contribution of this project is the conversion from FA to AST, which makes it possible
 to convert a flat list of phrases to a regular expression.
 The visualization of AST, NFA, and DFA are done by GraphViz.
@@ -57,11 +58,11 @@ The visualization of AST, NFA, and DFA are done by GraphViz.
 
 # Dependencies
 
-* [`OpenFST`](http://www.openfst.org) under Apache License
+* [OpenFST](http://www.openfst.org) under Apache License
 
-* [`GraphViz`](https://www.graphviz.org) under Common Public License Version 1.0
+* [GraphViz](https://www.graphviz.org) under Common Public License Version 1.0
 
-* [`Lark-Parser](https://github.com/lark-parser/lark) under MIT License
+* [Lark-Parser](https://github.com/lark-parser/lark) under MIT License
 
 
 # Contact
