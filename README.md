@@ -1,13 +1,13 @@
 # nlpregex
 Regular Language Representation Converter, Visualizer, and Decoder &amp; Acceptor
 
-<a href="doc/banner.png"> <img src="doc/banner.png"></a>
+<a href="docs/banner.png"> <img src="docs/banner.png"></a>
 
 
-<a href="doc/ecosystem.png"> <img src="doc/ecosystem.png"></a>
+<a href="docs/ecosystem.png"> <img src="docs/ecosystem.png"></a>
 
-<a href="doc/conversion.png"> <img src="doc/conversion.png"></a>
+<a href="docs/conversion.png"> <img src="docs/conversion.png"></a>
 
-<a href="doc/nfa.png"> <img src="doc/nfa.png"></a>
+<a href="docs/nfa.png"> <img src="docs/nfa.png"></a>
 
-<a href="doc/dfa.png"> <img src="doc/dfa.png"></a>
+<a href="docs/dfa.png"> <img src="docs/dfa.png"></a>
