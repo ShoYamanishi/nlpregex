@@ -1,8 +1,10 @@
-# nlpregex READEME UNDER DEVELOPMENT SOON TO BE READY
-Regular Language Representation Converter, Visualizer, and Decoder &amp; Acceptor
+# nlpregex 
+
+Regular Language Representation Converter, Visualizer, and Decoder &amp; Acceptor.
+
+READEME UNDER DEVELOPMENT SOON TO BE READY
 
 <a href="docs/banner.png"> <img src="docs/banner.png"></a>
-
 
 # Description
 Nlpregex is a set of python tools and components to visualize and convert representation of regular language.
@@ -33,6 +35,7 @@ The visualization of AST, NFA, and DFA are done by GraphViz.
 
 ## From regular expression to pretty-format, flat list, AST, NFA, and DFA
 
+Command line :
 
 <a href="docs/nfa.png"> <img src="docs/nfa.png" width=200 ></a>
 
@@ -55,6 +58,16 @@ The visualization of AST, NFA, and DFA are done by GraphViz.
 5. Install GraphViz binding (pip install GraphViz)
 6. Install Lark parser (pip install lark-parser)
 7. Add the path that contains nlpregex to PYTHONPATH
+
+# Command Line Tools
+
+## 
+
+##
+
+
+
+
 
 # Dependencies
 
