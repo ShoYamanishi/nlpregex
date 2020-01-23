@@ -25,6 +25,9 @@ def parse_commandline():
     arg_parser.add_argument( '-expand',               nargs = '*', metavar = '<list of nonterminals>',  
         help = 'tries to expand the given nontermals (default NONE)' )
 
+    arg_parser.add_argument( '-expand_all_nt',        action = "store_true",  
+        help = 'tries to expand all the nonterminals for the specified rule' )
+
     arg_parser.add_argument( '-expand_finite_repeat', action = "store_true",
         help = 'expands finite repeats' )
 
@@ -59,9 +62,15 @@ def main():
 
         ast = ASTs[rule]
 
-        if comm_args.expand:
+        if comm_args.expand_all_nt:
+            all_nt = list(ASTs.keys())
+
+            ast.expand_nonterminals( list( all_nt ), ASTs )
+
+        elif comm_args.expand:
             ast.expand_nonterminals( comm_args.expand, ASTs )
-            ast.clean_epsilon()
+
+        ast.clean_epsilon()
 
         if comm_args.expand_finite_repeat:
             ast.replace_finite_repeat_with_union()

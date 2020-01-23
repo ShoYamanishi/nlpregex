@@ -29,6 +29,9 @@ def parse_commandline():
     arg_parser.add_argument( '-expand',               nargs = '*',     metavar = '<list of nonterminals>',  
         help = 'tries to expand the given nontermals (default NONE)' )
 
+    arg_parser.add_argument( '-expand_all_nt',        action = "store_true",  
+        help = 'tries to expand all the nonterminals for the specified rule' )
+
     return arg_parser
 
 
@@ -58,7 +61,13 @@ def main():
 
     ast.clean_epsilon()
 
-    if comm_args.expand:
+    if comm_args.expand_all_nt:
+        all_nt = list(ASTs.keys())
+        all_nt.remove( comm_args.rule[0] )
+
+        ast.expand_nonterminals( list( all_nt ), ASTs )
+
+    elif comm_args.expand:
         ast.expand_nonterminals( comm_args.expand, ASTs )
 
     nfa = ast.generate_fst( generate_out_tokens = True )

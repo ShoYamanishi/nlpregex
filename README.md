@@ -1,8 +1,10 @@
+# READEME UNDER DEVELOPMENT SOON TO BE READY
+
 # nlpregex 
 
 Regular Language Representation Converter, Visualizer, and Decoder &amp; Acceptor.
 
-READEME UNDER DEVELOPMENT SOON TO BE READY
+
 
 <a href="docs/banner.png"> <img src="docs/banner.png"></a>
 
@@ -18,6 +20,8 @@ The conversion of the representations forms a closed ecosystem among the followi
 * Deterministic Finite-state Automaton (DFA)
 * Flat list of phrases (provided the language does not contain infinite repetitions.)
 
+The visualization of AST, NFA, and DFA are done by GraphViz.
+
 <a href="docs/ecosystem.png"> <img src="docs/ecosystem.png"></a>
 
 The regular expression is augumented to include the output attributes after a terminal, and
@@ -27,9 +31,11 @@ The attributes are transferred to the output tokens of FA and it is used for the
 # Conversion from FA to AST
 The technical contribution of this project is the conversion from FA to AST, which makes it possible
 to convert a flat list of phrases to a regular expression.
-The visualization of AST, NFA, and DFA are done by GraphViz.
 
 <a href="docs/conversion.png"> <img src="docs/conversion.png"></a>
+
+!!!More Explanation HERE!!!
+
 
 # Examples
 

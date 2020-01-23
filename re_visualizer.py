@@ -26,6 +26,9 @@ def parse_commandline():
     arg_parser.add_argument( '-expand',               nargs = '*',     metavar = '<list of nonterminals>',  
         help = 'tries to expand the given nontermals (default NONE)' )
 
+    arg_parser.add_argument( '-expand_all_nt',        action = "store_true",  
+        help = 'tries to expand all the nonterminals for the specified rule' )
+
     arg_parser.add_argument( '-ast',                  nargs = 1,       metavar = '<file name w/o ext>',
         help = 'draws abstract syntax tree to the file' )
 
@@ -44,7 +47,6 @@ def parse_commandline():
     arg_parser.add_argument( '-horizontal',           action="store_true", 
         help = 'draw AST horizontally' )
 
-
     return arg_parser
 
 
@@ -54,7 +56,6 @@ def main():
     comm_args   = comm_parser.parse_args()
 
     input_content = comm_args.infile.read()
-
     
 #    print (comm_args)
 
@@ -70,7 +71,13 @@ def main():
 
     ast.clean_epsilon()
 
-    if comm_args.expand:
+    if comm_args.expand_all_nt:
+        all_nt = list(ASTs.keys())
+        all_nt.remove( comm_args.rule[0] )
+
+        ast.expand_nonterminals( list( all_nt ), ASTs )
+
+    elif comm_args.expand:
         ast.expand_nonterminals( comm_args.expand, ASTs )
 
     if comm_args.ast:
@@ -79,7 +86,6 @@ def main():
         else:
             orientation = 'vertical'
         ast.draw( comm_args.ast[0], comm_args.s, comm_args.t, orientation )
-
 
     if comm_args.nfa or comm_args.dfa:
         nfa = ast.generate_fst( generate_out_tokens = True )
