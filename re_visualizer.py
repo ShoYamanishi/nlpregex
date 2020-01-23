@@ -56,12 +56,12 @@ def main():
     input_content = comm_args.infile.read()
 
     
-    print (comm_args)
+#    print (comm_args)
 
     lp   = nlpregex.regular_language.lark_parser.LarkParser()
     ASTs = lp.parse_rules( input_content )
 
-    if comm_args.rule[0] not in ASTs:
+    if not comm_args.rule or comm_args.rule[0] not in ASTs:
 
         comm_parser.print_help( sys.stdout )
         sys.exit(1)

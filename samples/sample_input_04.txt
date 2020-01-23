@@ -1,0 +1,35 @@
+<top_rule> : (
+    Loremconsectetur |
+    (
+        adipiscing eiusmod? |
+        consectetur tempor? adipiscing eiusmod? |
+        incididunt tempor? adipiscing eiusmod? |
+        ( labore | dolore ) tempor? adipiscing eiusmod?
+    ) ( ( ( sit | tempor ) )? amet ( ( ut | et ) )? )? |
+    ( Lorem | ipsum ) ( consectetur | incididunt | labore | dolore ) |
+    ( Lorem | ipsum ) ( consectetur | incididunt | labore | dolore ) (
+        ( ( tempor | sit ) )? veniam |
+        sitnostrud |
+        ( ( tempor | sit ) )? adipiscing |
+        sitnostrud |
+        ( ( tempor | sit ) )? exercitation |
+        sitofficia |
+        ( ( tempor | sit ) )? ullamco |
+        ( ut | et ) commodo |
+        ( ut | et ) reprehenderit |
+        ( ut | et ) voluptate |
+        ( ut | et ) velit
+    ) |
+    ( Lorem | ipsum ) ( consectetur | incididunt | labore | dolore ) ( (
+        ( ( tempor | sit ) )? veniam |
+        sitnostrud |
+        ( ( tempor | sit ) )? exercitation |
+        sitofficia |
+        sitproident |
+        ( ( tempor | sit ) )? ullamco |
+        ( ( tempor | sit ) )? culpa |
+        sitmollit |
+        ( ( tempor | sit ) )? adipiscing |
+        sitdeserunt
+    ) )?
+) ;

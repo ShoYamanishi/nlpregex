@@ -52,7 +52,7 @@ def main():
     ast = lp.parse_lines( lines_content )
 
     nfa = ast.generate_fst( generate_out_tokens = True )
-    dfa = nlpregex.regular_language.fa.DFA_from_NFA( nfa )
+    dfa = nlpregex.regular_language.fa.DFA_from_NFA( nfa, optimize = True )
 
     converter = nlpregex.regular_language.fa_to_ast.FAtoAST( dfa, comm_args.min_num_occurrences, comm_args.min_num_terms )
 

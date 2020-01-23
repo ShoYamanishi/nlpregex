@@ -129,14 +129,17 @@ class FAtoAST():
             reducer04.set_balanced_tokens( self.symManager.sse_common_expression_reducer_balanced_pairs() )
             reducer04.reduce()
 
-        # 6. Modify sseAST for balanced tokens.
+        # 6. Remove nonterminal-only trees.
+        forrest.remove_nt_only_trees();
+
+        # 7. Modify sseAST for balanced tokens.
         forrest.balance_trees_for_out_tokens( self.symManager.sse_common_expression_reducer_balanced_pairs() )
 
-        # 7. Find all the nonterminals and generate proper symbols.
+        # 8. Find all the nonterminals and generate proper symbols.
         nonterminals = forrest.find_nonterminals()
         self.symManager.handle_nonterminals( nonterminals )
 
-        # 8. Convert sseASTs to ASTs
+        # 9. Convert sseASTs to ASTs
         self.construct_ASTs(forrest)
 
         return forrest;

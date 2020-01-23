@@ -1,3 +1,2 @@
 <nt01> : [out_token1 ]( t01 | t02 | <nt02> )[out_token2] ;
-<nt02> : abc def ( [out_token3] (ghi xyz) [out_token4] ) ?
-;
+<nt02> : abc def ( [out_token3] (ghi xyz) [out_token4] ) ? ;

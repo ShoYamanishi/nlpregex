@@ -1,0 +1,34 @@
+<NT_0> : (
+    (
+        ( <NT_10> <NT_7> | <NT_12> <NT_7> | <NT_14> <NT_7> ) amet |
+        <NT_10> amet |
+        <NT_12> amet |
+        <NT_14> amet
+    ) <NT_9>? |
+    <NT_13> (
+        sitdeserunt |
+        sitmollit |
+        sitproident |
+        sitofficia |
+        sitnostrud |
+        <NT_11>
+    )? |
+    <NT_13> <NT_7> <NT_11> |
+    <NT_13> <NT_9> ( velit | voluptate | reprehenderit | commodo ) |
+    <NT_14> |
+    Loremconsectetur |
+    <NT_10> |
+    <NT_12>
+);
+<NT_2> : <NT_12> eiusmod;
+<NT_4> : <NT_14> eiusmod;
+<NT_5> : <NT_6> adipiscing;
+<NT_6> : ( dolore | labore | incididunt | consectetur );
+<NT_7> : ( sit | tempor );
+<NT_8> : ( ipsum | Lorem );
+<NT_9> : ( et | ut );
+<NT_10> : ( <NT_2> | <NT_4> );
+<NT_11> : ( culpa | ullamco | exercitation | veniam | adipiscing );
+<NT_12> : ( <NT_5> | adipiscing );
+<NT_13> : <NT_8> <NT_6>;
+<NT_14> : <NT_6> tempor adipiscing;

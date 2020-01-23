@@ -25,6 +25,9 @@ def parse_commandline():
     arg_parser.add_argument( '-expand',               nargs = '*', metavar = '<list of nonterminals>',  
         help = 'tries to expand the given nontermals (default NONE)' )
 
+    arg_parser.add_argument( '-expand_all_nt',        action = "store_true",  
+        help = 'tries to expand all the nonterminals for the specified rule' )
+
     arg_parser.add_argument( '-expand_finite_repeat', action = "store_true",
         help = 'expands finite repeats, otherwise, it will be replaced with a temporary token' )
 
@@ -43,7 +46,7 @@ def main():
     lp   = nlpregex.regular_language.lark_parser.LarkParser()
     ASTs = lp.parse_rules( input_content )
 
-    if comm_args.rule[0] not in ASTs:
+    if not comm_args.rule or comm_args.rule[0] not in ASTs:
 
         comm_parser.print_help( sys.stdout )
         sys.exit(1)
@@ -52,7 +55,13 @@ def main():
 
     ast.clean_epsilon()
 
-    if comm_args.expand:
+    if comm_args.expand_all_nt:
+        all_nt = list(ASTs.keys())
+        all_nt.remove( comm_args.rule[0] )
+
+        ast.expand_nonterminals( list( all_nt ), ASTs )
+
+    elif comm_args.expand:
         ast.expand_nonterminals( comm_args.expand, ASTs )
 
     if comm_args.expand_finite_repeat:

@@ -1370,10 +1370,9 @@ class AST(nlpregex.abs_graph.graph.RootedTree):
     # @param indent:     indent width for each depth
     # @param print_attr: True/False
     def emit_formatted_text(self, width_hint, indent, print_attr=True):
-        depth = self.calculate_text_width(print_attr)
-
+        self.calculate_text_width(print_attr)
         if self.root:
-            return self.visit_and_emit_formatted_text( self.root, depth, width_hint, indent, print_attr )
+            return self.visit_and_emit_formatted_text( self.root, 0, width_hint, indent, print_attr )
 
         else:
             return ''
@@ -1413,11 +1412,9 @@ class AST(nlpregex.abs_graph.graph.RootedTree):
             width += len(n.content)
 
         elif n.ast_node_type == 'finite repeat':
-
             width += len( '(  ){ ' + str(n.repeat_min)  + ', ' + str(n.repeat_max) + ' }' )
 
         elif n.ast_node_type == 'infinite repeat':
-
             width += len( '(  )*' )
 
         if print_attr:
@@ -1427,7 +1424,7 @@ class AST(nlpregex.abs_graph.graph.RootedTree):
             width += self.visit_and_calculate_text_width( c, print_attr )
 
         n.text_width = width
-
+        
         return width 
 
 
@@ -1596,7 +1593,9 @@ class AST(nlpregex.abs_graph.graph.RootedTree):
         child_prologue = children[0].prologue_for_formatted_text()
         child_epilogue = children[0].epilogue_for_formatted_text()
 
-        if  ( children[0].ast_node_type == 'terminal' or children[0].ast_node_type == 'nonterminal' ) and child_prologue == '' and child_epilogue == '':
+        if  (    children[0].ast_node_type == 'terminal' 
+              or children[0].ast_node_type == 'nonterminal' 
+              or children[0].ast_node_type == 'union'        ) and child_prologue == '' and child_epilogue == '':
             out_str = self.visit_and_emit_formatted_text( children[0] , depth , width_hint, indent, print_attr )
         else:
             out_str = '( '

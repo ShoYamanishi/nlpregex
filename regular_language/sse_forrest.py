@@ -939,6 +939,37 @@ class sseASForrest( nlpregex.abs_graph.graph.RootedTree ):
         return pos_end - pos_begin == 2 and c.ast_node_type[0] == 't' and c.balanced_out_pre == '' and c.balanced_out_post == ''
 
 
+    # @brief remove trees in the following form <NT_X> : <NT_Y>.
+    #        it can happen as a result of common subexpression reduction.
+    #        Remove this tree, and replace all the occurrence of NT_X with NT_Y.
+    def remove_nt_only_trees( self ):
+        map_badNT_to_newNT = self.find_nt_only_trees()
+        for nt in map_badNT_to_newNT:
+            self.remove_AST (self.root.children_map[nt] )
+            del ( self.root.children_map[nt] )
+        self.visit_and_replace_old_nt_with_new_nt(self.root, map_badNT_to_newNT)
+
+    def visit_and_replace_old_nt_with_new_nt( self, n, map_badNT_to_newNT ):
+
+        if n.ast_node_type in map_badNT_to_newNT:
+            n.ast_node_type = map_badNT_to_newNT[n.ast_node_type]
+
+        else:
+            children = [ e.other_node_of( n ) for e in  n.out_neighbors() ]
+            for c in children:
+                self.visit_and_replace_old_nt_with_new_nt( c, map_badNT_to_newNT ) 
+
+    def find_nt_only_trees( self ):
+        map_badNT_to_newNT = {}
+        for nt in self.root.children_map:
+            ast = self.root.children_map[nt]
+            if ast.ast_node_type[0] == 'n':
+                 map_badNT_to_newNT[nt] = ast.ast_node_type
+        return map_badNT_to_newNT
+ 
+
+
+
     def find_nonterminals( self ):
 
         nonterminals = set( self.root.children_map )

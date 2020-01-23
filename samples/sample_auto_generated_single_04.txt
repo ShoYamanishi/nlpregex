@@ -1,0 +1,53 @@
+<NT_0> : (
+    (
+        (
+            (
+                (
+                    ( dolore | labore | incididunt | consectetur ) adipiscing |
+                    adipiscing
+                ) eiusmod |
+                ( dolore | labore | incididunt | consectetur ) tempor adipiscing eiusmod
+            ) ( sit | tempor ) |
+            (
+                ( dolore | labore | incididunt | consectetur ) adipiscing |
+                adipiscing
+            ) ( sit | tempor ) |
+            ( dolore | labore | incididunt | consectetur ) tempor adipiscing ( sit | tempor )
+        ) amet |
+        (
+            (
+                ( dolore | labore | incididunt | consectetur ) adipiscing |
+                adipiscing
+            ) eiusmod |
+            ( dolore | labore | incididunt | consectetur ) tempor adipiscing eiusmod
+        ) amet |
+        (
+            ( dolore | labore | incididunt | consectetur ) adipiscing |
+            adipiscing
+        ) amet |
+        ( dolore | labore | incididunt | consectetur ) tempor adipiscing amet
+    ) ( et | ut )? |
+    (
+        ( dolore | labore | incididunt | consectetur ) adipiscing |
+        adipiscing
+    ) eiusmod |
+    ( ipsum | Lorem ) ( dolore | labore | incididunt | consectetur ) (
+        sitdeserunt |
+        sitmollit |
+        culpa |
+        sitproident |
+        ullamco |
+        sitofficia |
+        exercitation |
+        sitnostrud |
+        veniam |
+        adipiscing
+    )? |
+    ( ipsum | Lorem ) ( dolore | labore | incididunt | consectetur ) ( sit | tempor ) ( culpa | ullamco | exercitation | veniam | adipiscing ) |
+    ( ipsum | Lorem ) ( dolore | labore | incididunt | consectetur ) ( et | ut ) ( velit | voluptate | reprehenderit | commodo ) |
+    ( dolore | labore | incididunt | consectetur ) adipiscing |
+    ( dolore | labore | incididunt | consectetur ) tempor adipiscing |
+    ( dolore | labore | incididunt | consectetur ) tempor adipiscing eiusmod |
+    Loremconsectetur |
+    adipiscing
+);
