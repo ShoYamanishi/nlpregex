@@ -1,31 +1,34 @@
-# READEME UNDER DEVELOPMENT SOON TO BE READY
-
 # nlpregex 
 
 Regular Language Representation Converter, Visualizer, and Decoder &amp; Acceptor.
 
 
-
 <a href="docs/banner.png"> <img src="docs/banner.png"></a>
 
 # Description
-Nlpregex is a set of python tools and components to visualize and convert representation of regular language.
+Nlpregex is a set of python tools and components to visualize and convert representation
+of regular language.
 It is aimed at speech recognition and natural language processing, 
 and the alphabets (Σ) are not characters, but tokenized terminals.
-The conversion of the representations forms a closed ecosystem among the following
+The conversion of the representations forms a closed ecosystem among the following:
 
 * Regular Expression (RE)
+
 * Abstract Syntax Tree (AST)
+
 * Nondeterministic Finite-state Automaton (NFA) 
+
 * Deterministic Finite-state Automaton (DFA)
+
 * Flat list of phrases (provided the language does not contain infinite repetitions.)
+
 
 The visualization of AST, NFA, and DFA are done by GraphViz.
 
 <a href="docs/ecosystem.png"> <img src="docs/ecosystem.png"></a>
 
-The regular expression is augumented to include the output attributes after a terminal, and
-before and after a group enclosed by '(' and ')' in paires.
+The regular expression is augumented to include the output attributes after a terminal,
+and before and after a group enclosed by '(' and ')' in paires.
 The attributes are transferred to the output tokens of FA and it is used for the decoder as FST.
 
 # Conversion from FA to AST
@@ -34,45 +37,212 @@ to convert a flat list of phrases to a regular expression.
 
 <a href="docs/conversion.png"> <img src="docs/conversion.png"></a>
 
-!!!More Explanation HERE!!!
+It takes the following steps.
 
+## Form a set of equations
+
+Form a set of simultaneous equations in Kleene Algebra.
+Each state in FA represents a variable, and eachinput token a coefficient.
+Each equation represents the transitions from a single state to its out-neighbors.
+One artificial start state and another final state are introduced.
+The artificial start state has a transition to the real start state,
+and the real final states have transitions to the artificial final state.
+The coefficients are represented by a special kind of AST, [sseForest](regular_language/sse_forrest.py).
+
+## Solve the equations
+
+Solve the equations to the row that corresponds to the artiicial start state 
+by a [solver](regular_language/sse_solver.py).
+The row reduction is done by substitution similar to Gaussian elimination.
+The self-recursions are eliminated by Arden's rule.
+The resultant equation has the following form: 
+
+    ```<artificial_start_state> = coeff <artificial_final_state>```
+
+The remaining coefficient corresponds to the resultant AST.
+
+## Optionally detect and reduce the common subexpressions.
+
+It is not only a [common subtree reduction](regular_language/common_subtree_reducer.py)
+but it considers the following two types.
+
+   * Common terms among the union nodes. [Reducer](regular_language/common_union_subexpression_reducer.py)
+     Ex. `(abc(a|b) |def|ghi?)` and `(abc(a|b)|jkl|ghi?)` has a common subexpression `(abc(a|b)|ghi?)`.
+
+   * Common substrings among the serial nodes.[Reducer](regular_language/common_repetition_reducer.py)
+     Ex. `(a b a b c)` and `(b a b c a) has a longest common substring `(b a b)`.
+
+Those common subexpressions are detected and reduced one-by-one in a greedy manner with the following criteria.
+
+* Tree height
+* Number of terminals under the subtree
+* Number of occurrences of the same subtree
+* Length of the regular expression
+
+# Syntax
+
+A regular expression, or rule, consists of two parts: LHS and RHS.
+LHS designates the nonterminal for the expression.
+RHS is the actual regular expression.
+Ex.  `<NT_0> :  a b c ;`
+
+
+## uary operators
+
+* 0 or more repetition (kleene closure) (`*`) Ex. `a*`, `(a b c)*`
+
+* 1 or more repetition (`+`) (`*`) Ex. `a*`, `(a b c)*`
+
+* Option (`?`) (`*`) Ex. `a?`, `(a b c)?`
+
+* finite repetition (`{min,max}`) Ex. `a{1,3}`, `(a b c){2,5}`
+
+## binary operators
+
+* Union (selection) (`|`) Ex. `(a|b|c)`
+
+* Concatenation  Ex. `a b c`
+
+## Alphabets
+
+* Terminal : a word token.  Ex. `abc`
+
+* Nonterminal : a token enclosed by angle brackets `<>` Ex. `<NT_0>`
+
+## Others
+
+* Grouping by `(` and `)` Ex. `a b c ( d | f | g | h i ) j k`
+
+* Output attributes enclosed by `[` and `]`
+  Output attributes can be placed immediately after a terminal, or before and after a grouping.
+  Ex. `a b[action_01] c`, ` a b c [prologue_01](d | e | f [action_f] )[epilogue_01] g h i`.
+
+
+Please see [grammar_nlpregex_rules](nlpregex/regular_language/lark_parse.py) for details.
 
 # Examples
 
 ## From regular expression to pretty-format, flat list, AST, NFA, and DFA
+This example takes the sample file `samples\sample_input_04.txt` and visualize the regular expression
+designated by `<top_rule>`.
 
-Command line :
+Command to pretty-format.
+```shellscript
+python re_formatter.py samples/sample_input_04_oneline.txt pretty.txt
+```
+The output file is the same as [sample_input_04.txt](samples/sample_input_04.txt).
 
-<a href="docs/nfa.png"> <img src="docs/nfa.png" width=200 ></a>
+Command to generate flat list of phrases.
+```shellscript
+python re_phrase_expander.py samples/sample_input_04_oneline.txt -rule "<top_rule>" expanded.txt
+```
+The output file is the same as [sample_input_04.txt](samples/sample_expanded_04.txt).
+Please note that the regular expression in sample_input_04.txt and sample_input_04_oneline.txt has 
+redundancies and the output file has duplications, which can be removed by `sort | uniq`.
 
-<a href="docs/dfa.png"> <img src="docs/dfa.png" width=200 ></a>
+Command to generate AST, NFA, and DFA.
+```shellscript
+`python re_visualizer.py samples/sample_input_04.txt -rule "<top_rule>" -expand_all_nt -ast ast_fig -nfa nfa_fig -dfa dfa_fig -t svg`
+```
 
+Here are the outputs generated by the command. (Click the figures to see the SVG file.)
 
+<a href="docs/ast.png"> <img src="docs/ast_fig.svg" width=200 ></a>
+
+<a href="docs/nfa.png"> <img src="docs/nfa_fig.svg" width=200 ></a>
+
+<a href="docs/dfa.png"> <img src="docs/dfa_fig.svg" width=200 ></a>
 
 ## Auto generate rules from a flat list
+This example takes the sample file that contains a flat list and generate a regular expression 
+or a set of regular expressions.
+
+Command to generate a single regular expression.
+```shellscript
+python flat_list_to_re.py samples/sample_expanded_04.txt auto_gen_single.txt
+```
+The output file is the same as [sample_auto_generated_single_04.txt](samples/sample_auto_generated_single_04.txt).
+
+
+Command to generate a set of regular expressions by reducing the common subexpressions.
+```shellscript
+python flat_list_to_re.py samples/sample_expanded_04.txt auto_gen_reduced.txt -reduce
+```
+The output file is the same as [sample_auto_generated_reduced_04.txt](samples/sample_auto_generated_reduce_04.txt).
+This is the outcome of the most aggressive reduction where any subexpression that has at least two terminals, and that occurrs at least twice in the trees are subject to reduction.
 
 
 ## Decode as FST
+The following shows an interactive decoding action for the rules 
+defined in [sample_input_03.txt](samples/sample_input_03.txt).
 
+```shellscript
+python3 nlpregex\re_decoder.py -rulefile nlpregex\samples\sample_input_03.txt -rule "<nt01>" -expand_all_nt
+t01
+out_token1 out_token2
+abc def
+out_token1 out_token2
+t03
+__NOT_ACCEPTED__
+abc def ghi xyz
+out_token1 out_token3 out_token4 out_token2
+```
 
 # Install
 
-1. Install GraphViz
-2. Install OpenFST
-3. Add GraphViz & OpenFST command tools paths to PATH
-4. Install Python3
-5. Install GraphViz binding (pip install GraphViz)
-6. Install Lark parser (pip install lark-parser)
-7. Add the path that contains nlpregex to PYTHONPATH
+1. Install [GraphViz](https://www.graphviz.org/).
+
+2. Install [OpenFST](http://www.openfst.org/twiki/bin/view/FST/WebHome).
+If you are using Windows, then these guys [here](https://github.com/kkm000/openfst) has a nice ported version.
+
+3. Add the paths to GraphViz & OpenFST command tool to PATH.
+
+4. Install Python3. Probably you already have [Anaconda](https://www.anaconda.com/) if you are working on NLU stuff.)
+
+5. Install GraphViz binding (`pip install graphviz`)
+
+6. Install [Lark parser](`https://github.com/lark-parser/lark`) (`pip install lark-parser`)
+
+7. Add the path to the directory that contains nlpregex to PYTHONPATH
 
 # Command Line Tools
 
-## 
+* [re_formatter.py](nlpregex/re_formatter.py)
+This reformats the rules(expressions) in the given file with nice indentation.
+See the command line help with `python re_formatter.py -h`.
 
-##
+* [re_phrase_expander.py](nlpregex/re_phrase_expander.py) 
+This expands the specified rule into a list of phrases it accepts.
+The finite repetisions are not expanded for an obvious reason.
+See the command line help with `python re_phrase_expander.py -h`.
+
+* [re_phrase_visualizer.py](nlpregex/re_visuzlizer.py) 
+This visualizes the specified rule into AST, NFA, and DFA in either SVG or PDF format.
+These visuals are created by GraphViz's dot command.
+See the command line help with `python re_visualizer.py -h`.
+
+* [re_decoder.py](nlpregex/re_decoder.py) 
+This decodes the input tokens with the specified rule into output tokens.
+It works as a finite-state transducer, whose rules are specified by an augmented regular expression.
+See the command line help with `python re_decoder.py -h`.
+
+* [flat_list_to_re.py](nlpregex/flat_list_to_re.py) 
+This generates a rule or a set of rules from the given flat list of phrases.
+It also detects and reduces the common subexpressions.
+See the command line help with `python flat_list_to_re.py -h`.
 
 
+# Limitation
+If a regular expression has paired output attributes associated to a group, then the reconstruction
+from the corresponding DFA back to an AST is not possible due to lost associativity during
+the conversion from NFA to DFA.
+Therefore, if a regular expression has paired output attributes associated to a group, 
+then the reconstruction from the corresponding flat list back to an AST is not possible.
+However, the converted DFA with lost associativity still works correctly as a decoder.
 
+# TODO
+
+* Augument the expression and the tools to integrate statistical treatment in order for the decoder to work as WFST.
 
 
 # Dependencies
