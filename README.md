@@ -195,11 +195,11 @@ out_token1 out_token3 out_token4 out_token2
 1. Install [GraphViz](https://www.graphviz.org/).
 
 2. Install [OpenFST](http://www.openfst.org/twiki/bin/view/FST/WebHome).
-If you are using Windows, then these guys [here](https://github.com/kkm000/openfst) has a nice ported version.
+If you are using Windows, then these guys [here](https://github.com/kkm000/openfst) have a nice ported version.
 
 3. Add the paths to GraphViz & OpenFST command tool to PATH.
 
-4. Install Python3. Probably you already have [Anaconda](https://www.anaconda.com/) if you are working on NLU stuff.)
+4. Install Python3. (Probably you already have [Anaconda](https://www.anaconda.com/) if you are working on NLU stuff.)
 
 5. Install GraphViz binding (`pip install graphviz`)
 
