@@ -20,38 +20,38 @@ The conversion of the representations forms a closed ecosystem among the followi
 
 * Deterministic Finite-state Automaton (DFA)
 
-* Flat list of phrases (provided the language does not contain infinite repetitions.)
+* Flat list of phrases (provided the language does not contain infinite repetitions)
 
 
 The visualization of AST, NFA, and DFA are done by GraphViz.
 
 <a href="docs/ecosystem.png"> <img src="docs/ecosystem.png"></a>
 
-The regular expression is augumented to include the output attributes after a terminal,
+The regular expression is augmented to include the output attributes after a terminal,
 and before and after a group enclosed by '(' and ')' in paires.
 The attributes are transferred to the output tokens of FA and it is used for the decoder as FST.
 
 # Conversion from FA to AST
-The technical contribution of this project is the conversion from FA to AST, which makes it possible
-to convert a flat list of phrases to a regular expression.
 
 <a href="docs/conversion.png"> <img src="docs/conversion.png"></a>
 
+The technical contribution of this project is the conversion from FA to AST,
+which makes it possible to convert a flat list of phrases to a regular expression.
 It takes the following steps.
 
-## Form a set of equations
+## 1. Form a set of equations
 
-Form a set of simultaneous equations in Kleene Algebra.
-Each state in FA represents a variable, and eachinput token a coefficient.
+The first step Forms a set of simultaneous equations in Kleene Algebra.
+Each state in FA represents a variable, and each input token a coefficient.
 Each equation represents the transitions from a single state to its out-neighbors.
 One artificial start state and another final state are introduced.
-The artificial start state has a transition to the real start state,
-and the real final states have transitions to the artificial final state.
-The coefficients are represented by a special kind of AST, [sseForest](regular_language/sse_forrest.py).
+The artificial start state has an epsilon transition to the real start state,
+and the real final states have epsilon transitions to the artificial final state.
+The coefficients are represented by a special kind of ASTs, called [sseForest](regular_language/sse_forrest.py).
 
-## Solve the equations
+## 2. Solve the equations
 
-Solve the equations to the row that corresponds to the artiicial start state 
+The second step solves the equations down to the row that corresponds to the artiicial start state 
 by a [solver](regular_language/sse_solver.py).
 The row reduction is done by substitution similar to Gaussian elimination.
 The self-recursions are eliminated by Arden's rule.
@@ -61,16 +61,16 @@ The resultant equation has the following form:
 
 The remaining coefficient corresponds to the resultant AST.
 
-## Optionally detect and reduce the common subexpressions.
-
+## 3. Optionally detect and reduce the common subexpressions.
+The third step optionally tries to detect and reduce common subexpressions.
 It is not only a [common subtree reduction](regular_language/common_subtree_reducer.py)
-but it considers the following two types.
+but it also considers the following two types.
 
-   * Common terms among the union nodes. [Reducer](regular_language/common_union_subexpression_reducer.py)
+   * Common terms among the union nodes. [(Reducer implementation)](regular_language/common_union_subexpression_reducer.py)
      Ex. `(abc(a|b) |def|ghi?)` and `(abc(a|b)|jkl|ghi?)` has a common subexpression `(abc(a|b)|ghi?)`.
 
-   * Common substrings among the serial nodes.[Reducer](regular_language/common_repetition_reducer.py)
-     Ex. `(a b a b c)` and `(b a b c a) has a longest common substring `(b a b)`.
+   * Common substrings among the serial nodes.[(Reducer implementation)](regular_language/common_repetition_reducer.py)
+     Ex. `(a b a b c)` and `(b a b c a)` has a longest common substring `(b a b)`.
 
 Those common subexpressions are detected and reduced one-by-one in a greedy manner with the following criteria.
 
@@ -79,7 +79,7 @@ Those common subexpressions are detected and reduced one-by-one in a greedy mann
 * Number of occurrences of the same subtree
 * Length of the regular expression
 
-# Syntax
+# Regular Expression (Rule) Syntax
 
 A regular expression, or rule, consists of two parts: LHS and RHS.
 LHS designates the nonterminal for the expression.
@@ -87,7 +87,7 @@ RHS is the actual regular expression.
 Ex.  `<NT_0> :  a b c ;`
 
 
-## uary operators
+## Unary operators
 
 * 0 or more repetition (kleene closure) (`*`) Ex. `a*`, `(a b c)*`
 
@@ -97,7 +97,7 @@ Ex.  `<NT_0> :  a b c ;`
 
 * finite repetition (`{min,max}`) Ex. `a{1,3}`, `(a b c){2,5}`
 
-## binary operators
+## Binary operators
 
 * Union (selection) (`|`) Ex. `(a|b|c)`
 
@@ -118,36 +118,37 @@ Ex.  `<NT_0> :  a b c ;`
   Ex. `a b[action_01] c`, ` a b c [prologue_01](d | e | f [action_f] )[epilogue_01] g h i`.
 
 
-Please see [grammar_nlpregex_rules](nlpregex/regular_language/lark_parse.py) for details.
+Please see [grammar_nlpregex_rules](regular_language/lark_parser.py) for details.
 
 # Examples
 
-## From regular expression to pretty-format, flat list, AST, NFA, and DFA
-This example takes the sample file `samples\sample_input_04.txt` and visualize the regular expression
-designated by `<top_rule>`.
+## From a regular expression to pretty-format, flat list, AST, NFA, and DFA
+This example takes the sample files [sample_input_04.txt](samples/sample_input_04.txt)
+and [sample_input_04_oneline.txt](samples/sample_input_04_oneline.txt)
+and visualize the regular expression designated by `<top_rule>`.
 
-Command to pretty-format.
+### Command to pretty-format.
 ```shellscript
 python re_formatter.py samples/sample_input_04_oneline.txt pretty.txt
 ```
 The output file is the same as [sample_input_04.txt](samples/sample_input_04.txt).
 
-Command to generate flat list of phrases.
+### Command to generate flat list of phrases.
 ```shellscript
 python re_phrase_expander.py samples/sample_input_04_oneline.txt -rule "<top_rule>" expanded.txt
 ```
-The output file is the same as [sample_input_04.txt](samples/sample_expanded_04.txt).
+The output file is the same as [sample_expanded_04.txt](samples/sample_expanded_04.txt).
 Please note that the regular expression in sample_input_04.txt and sample_input_04_oneline.txt has 
 redundancies and the output file has duplications, which can be removed by `sort | uniq`.
 
-Command to generate AST, NFA, and DFA.
+### Command to generate AST, NFA, and DFA.
 ```shellscript
 `python re_visualizer.py samples/sample_input_04.txt -rule "<top_rule>" -expand_all_nt -ast ast_fig -nfa nfa_fig -dfa dfa_fig -t svg`
 ```
 
 Here are the outputs generated by the command. (Click the figures to see the SVG file.)
 
-<a href="docs/ast.png"> <img src="docs/ast_fig.svg" width=200 ></a>
+<a href="docs/ast.png"> <img src="docs/ast_fig.svg" width=800 ></a>
 
 <a href="docs/nfa.png"> <img src="docs/nfa_fig.svg" width=200 ></a>
 
@@ -157,19 +158,20 @@ Here are the outputs generated by the command. (Click the figures to see the SVG
 This example takes the sample file that contains a flat list and generate a regular expression 
 or a set of regular expressions.
 
-Command to generate a single regular expression.
+### Command to generate a single regular expression.
 ```shellscript
 python flat_list_to_re.py samples/sample_expanded_04.txt auto_gen_single.txt
 ```
 The output file is the same as [sample_auto_generated_single_04.txt](samples/sample_auto_generated_single_04.txt).
 
 
-Command to generate a set of regular expressions by reducing the common subexpressions.
+### Command to generate a set of regular expressions by reducing the common subexpressions.
 ```shellscript
 python flat_list_to_re.py samples/sample_expanded_04.txt auto_gen_reduced.txt -reduce
 ```
-The output file is the same as [sample_auto_generated_reduced_04.txt](samples/sample_auto_generated_reduce_04.txt).
-This is the outcome of the most aggressive reduction where any subexpression that has at least two terminals, and that occurrs at least twice in the trees are subject to reduction.
+The output file is the same as [sample_auto_generated_reduced_04.txt](samples/sample_auto_generated_reduced_04.txt).
+This is the outcome of the most aggressive reduction where any subexpression that has at least two terminals, 
+and that occurrs at least twice in the trees are subject to reduction.
 
 
 ## Decode as FST
@@ -233,8 +235,8 @@ See the command line help with `python flat_list_to_re.py -h`.
 
 
 # Limitation
-If a regular expression has paired output attributes associated to a group, then the reconstruction
-from the corresponding DFA back to an AST is not possible due to lost associativity during
+If a regular expression has paired output attributes associated with a group, then the reconstruction
+from the corresponding DFA back to an AST is not possible due to the lost associativity during
 the conversion from NFA to DFA.
 Therefore, if a regular expression has paired output attributes associated to a group, 
 then the reconstruction from the corresponding flat list back to an AST is not possible.
@@ -242,7 +244,7 @@ However, the converted DFA with lost associativity still works correctly as a de
 
 # TODO
 
-* Augument the expression and the tools to integrate statistical treatment in order for the decoder to work as WFST.
+* Study the possibility of augmenting the expression and the tools to integrate statistical treatment in order for the decoder to work as WFST.
 
 
 # Dependencies
