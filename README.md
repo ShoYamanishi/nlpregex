@@ -109,11 +109,14 @@ Those common subexpressions are detected and reduced one-by-one in a greedy mann
 
 <a href="samples/flat_list_dfa.svg"> <img src="docs/flat_list_dfa.png" height=200 ></a>
 
-4. <a href="https://github.com/ShoYamanishi/nlpregex#conversion-from-fa-to-ast">Conversion from FA to ASTs</a>
+4. Conversion from FA to a single AST (see above)
+
+<a href="samples/sample_auto_generated_single_04.txt"> <img src="docs/auto_generated_single.png" height=700 ></a>
+
+
+5. Reduce the AST to a set of ASTs with nonterminals (see above)
 
 <a href="samples/sample_auto_generated_reduced_04.txt"> <img src="docs/auto_generated_reduced.png" height=400 ></a>
-
-<a href="samples/sample_auto_generated_single_04.txt"> <img src="docs/auto_generated_single.png" height=400 ></a>
 
 
 
