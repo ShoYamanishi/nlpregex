@@ -41,7 +41,7 @@ It takes the following steps.
 
 ## 1. Form a set of equations
 
-The first step Forms a set of simultaneous equations in Kleene Algebra.
+The first step Forms a set of simultaneous equations in [Kleene Algebra](https://en.wikipedia.org/wiki/Kleene_algebra).
 Each state in FA represents a variable, and each input token a coefficient.
 Each equation represents the transitions from a single state to its out-neighbors.
 One artificial start state and another final state are introduced.
@@ -54,7 +54,7 @@ The coefficients are represented by a special kind of ASTs, called [sseForest](r
 The second step solves the equations down to the row that corresponds to the artiicial start state 
 by a [solver](regular_language/sse_solver.py).
 The row reduction is done by substitution similar to Gaussian elimination.
-The self-recursions are eliminated by Arden's rule.
+The self-recursions are eliminated by [Arden's rule](https://en.wikipedia.org/wiki/Arden%27s_rule).
 The resultant equation has the following form: 
 
     ```<artificial_start_state> = coeff <artificial_final_state>```
