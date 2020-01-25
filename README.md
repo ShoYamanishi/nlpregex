@@ -45,7 +45,7 @@ The regular expression is augmented to include the output attributes after a ter
 and before and after a group enclosed by '(' and ')' in paires.
 The attributes are transferred to the output tokens of FA and it is used for the decoder as FST.
 
-# Conversion from FA to AST
+# Conversion from FA to AST(s)
 
 <a href="docs/conversion.png"> <img src="docs/conversion.png"></a>
 
@@ -92,6 +92,30 @@ Those common subexpressions are detected and reduced one-by-one in a greedy mann
 * Number of terminals under the subtree
 * Number of occurrences of the same subtree
 * Length of the regular expression
+
+# Conversion from a Flat List to RE
+
+<a href="samples/sample_expanded_04.txt"> <img src="docs/expanded_list.png" height=200 ></a>
+
+1. Parse by Lark LR(1) line parser into a trivial AST.
+
+<a href="samples/flat_list_parsed_rule.txt"> <img src="docs/parsed_lines.png" height=200 ></a>
+
+2. Convert the AST to a trivial lattice NFA 
+
+<a href="samples/flat_list_nfa.svg"> <img src="docs/flat_list_nfa.png" height=200 ></a>
+
+3. Convert the NFA to DFA by OpenFST (determinization and equivalent states reduction)
+
+<a href="samples/flat_list_dfa.svg"> <img src="docs/flat_list_dfa.png" height=200 ></a>
+
+4 <a https://github.com/ShoYamanishi/nlpregex#conversion-from-fa-to-ast>Conversion from FA to ASTs</a>
+
+<a href="samples/sample_auto_generated_reduced_04.txt"> <img src="docs/auto_generated_reduced.png" height=400 ></a>
+
+<a href="samples/sample_auto_generated_single_04.txt"> <img src="docs/auto_generated_single.png" height=400 ></a>
+
+
 
 # Regular Expression (Rule) Syntax
 
@@ -234,27 +258,156 @@ If you are using Windows, then these guys [here](https://github.com/kkm000/openf
 
 * [re_formatter.py](nlpregex/re_formatter.py)
 This reformats the rules(expressions) in the given file with nice indentation.
-See the command line help with `python re_formatter.py -h`.
+```
+usage: re_formatter.py [-h]
+                       [-rules [<list of nonterminals> [<list of nonterminals> ...]]]
+                       [-expand [<list of nonterminals> [<list of nonterminals> ...]]]
+                       [-expand_all_nt] [-expand_finite_repeat]
+                       [-width_hint [WIDTH_HINT]] [-indent [INDENT]]
+                       [infile] [outfile]
+
+reformat regular expression with the specified nonterminals replaced with sub-
+expressions
+
+positional arguments:
+  infile                input file
+  outfile               output file
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -rules [<list of nonterminals> [<list of nonterminals> ...]]
+                        rules to reformat (default ALL)
+  -expand [<list of nonterminals> [<list of nonterminals> ...]]
+                        tries to expand the given nontermals (default NONE)
+  -expand_all_nt        tries to expand all the nonterminals for the specified
+                        rule
+  -expand_finite_repeat
+                        expands finite repeats
+  -width_hint [WIDTH_HINT]
+                        max width at which this tool tries to fold the
+                        selection expression into multiple lines
+  -indent [INDENT]      number of spaces for a single indentation
+```
 
 * [re_phrase_expander.py](nlpregex/re_phrase_expander.py) 
 This expands the specified rule into a list of phrases it accepts.
 The finite repetisions are not expanded for an obvious reason.
-See the command line help with `python re_phrase_expander.py -h`.
+```
+usage: re_phrase_expander.py [-h] [-rule <nonterminal>]
+                             [-expand [<list of nonterminals> [<list of nonterminals> ...]]]
+                             [-expand_all_nt] [-expand_finite_repeat]
+                             [infile] [outfile]
+
+expand phrases of regular expression
+
+positional arguments:
+  infile                input file
+  outfile               output file
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -rule <nonterminal>   rule to expand
+  -expand [<list of nonterminals> [<list of nonterminals> ...]]
+                        tries to expand the given nontermals (default NONE)
+  -expand_all_nt        tries to expand all the nonterminals for the specified
+                        rule
+  -expand_finite_repeat
+                        expands finite repeats, otherwise, it will be replaced
+                        with a temporary token
+```
 
 * [re_phrase_visualizer.py](nlpregex/re_visuzlizer.py) 
 This visualizes the specified rule into AST, NFA, and DFA in either SVG or PDF format.
 These visuals are created by GraphViz's dot command.
-See the command line help with `python re_visualizer.py -h`.
+```
+usage: re_visualizer.py [-h] [-rule <nonterminal>]
+                        [-expand [<list of nonterminals> [<list of nonterminals> ...]]]
+                        [-expand_all_nt] [-ast <file name w/o ext>]
+                        [-nfa <file name w/o ext>] [-dfa <file name w/o ext>]
+                        [-t [pdf/svg]] [-s] [-horizontal]
+                        [infile] [outfile]
+
+visualize regular expression in AST, NFA, and DFA
+
+positional arguments:
+  infile                input file
+  outfile               output file
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -rule <nonterminal>   rule to expand
+  -expand [<list of nonterminals> [<list of nonterminals> ...]]
+                        tries to expand the given nontermals (default NONE)
+  -expand_all_nt        tries to expand all the nonterminals for the specified
+                        rule
+  -ast <file name w/o ext>
+                        draws abstract syntax tree to the file
+  -nfa <file name w/o ext>
+                        draws NFA to the file.
+  -dfa <file name w/o ext>
+                        draws DFA to the file.
+  -t [pdf/svg]          visual output file type. svg or pdf. default: pdf. Use
+                        svg if you have a unicode issue on Windows.
+  -s                    tries to show the visual immediately
+  -horizontal           draw AST horizontally
+```
 
 * [re_decoder.py](nlpregex/re_decoder.py) 
 This decodes the input tokens with the specified rule into output tokens.
 It works as a finite-state transducer, whose rules are specified by an augmented regular expression.
-See the command line help with `python re_decoder.py -h`.
+```
+usage: re_decoder.py [-h] [-rulefile RULEFILE] [-rule <nonterminal>]
+                     [-expand [<list of nonterminals> [<list of nonterminals> ...]]]
+                     [-expand_all_nt]
+                     [infile] [outfile]
+
+decode regular language with output attributes
+
+positional arguments:
+  infile                input file
+  outfile               output file
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -rulefile RULEFILE    regular expression rule file
+  -rule <nonterminal>   rule to expand
+  -expand [<list of nonterminals> [<list of nonterminals> ...]]
+                        tries to expand the given nontermals (default NONE)
+  -expand_all_nt        tries to expand all the nonterminals for the specified
+```
+
 
 * [flat_list_to_re.py](nlpregex/flat_list_to_re.py) 
 This generates a rule or a set of rules from the given flat list of phrases.
 It also detects and reduces the common subexpressions.
-See the command line help with `python flat_list_to_re.py -h`.
+```
+usage: flat_list_to_re.py [-h] [-reduce]
+                          [-min_num_occurrences [MIN_NUM_OCCURRENCES]]
+                          [-min_num_terms [MIN_NUM_TERMS]]
+                          [-width_hint [WIDTH_HINT]] [-indent [INDENT]]
+                          [infile] [outfile]
+
+generate regular expression from a flat list
+
+
+positional arguments:
+  infile                input file
+  outfile               output file
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -reduce               tries to reduce the common subexpressions
+  -min_num_occurrences [MIN_NUM_OCCURRENCES]
+                        min number of occurrences of a common subexpression to
+                        be considered for reduction
+  -min_num_terms [MIN_NUM_TERMS]
+                        min number of terminals in a common subexpression to
+                        be considered for reduction
+  -width_hint [WIDTH_HINT]
+                        max width at which this tool tries to fold the
+                        selection expression into multiple lines
+  -indent [INDENT]      number of spaces for a single indentation
+```
 
 
 # Limitation
