@@ -109,7 +109,7 @@ Those common subexpressions are detected and reduced one-by-one in a greedy mann
 
 <a href="samples/flat_list_dfa.svg"> <img src="docs/flat_list_dfa.png" height=200 ></a>
 
-4 <a https://github.com/ShoYamanishi/nlpregex#conversion-from-fa-to-ast>Conversion from FA to ASTs</a>
+4 <a "https://github.com/ShoYamanishi/nlpregex#conversion-from-fa-to-ast">Conversion from FA to ASTs</a>
 
 <a href="samples/sample_auto_generated_reduced_04.txt"> <img src="docs/auto_generated_reduced.png" height=400 ></a>
 
