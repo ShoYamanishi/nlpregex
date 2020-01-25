@@ -107,12 +107,12 @@ Those common subexpressions are detected and reduced one-by-one in a greedy mann
 
 2. Convert the AST to a trivial lattice NFA 
 
-<a href="samples/flat_list_nfa.svg"> <img src="docs/flat_list_nfa.png" height=200 ></a>
+<a href="docs/flat_list_nfa.svg"> <img src="docs/flat_list_nfa.png" height=200 ></a>
 
 
 3. Convert the NFA to DFA by OpenFST (determinization and equivalent states reduction)
 
-<a href="samples/flat_list_dfa.svg"> <img src="docs/flat_list_dfa.png" height=200 ></a>
+<a href="docs/flat_list_dfa.svg"> <img src="docs/flat_list_dfa.png" height=200 ></a>
 
 
 4. Conversion from FA to a single AST (see above)
