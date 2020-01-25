@@ -184,15 +184,19 @@ The following shows an interactive decoding action for the rules
 defined in [sample_input_03.txt](samples/sample_input_03.txt).
 
 ```shellscript
-python3 nlpregex\re_decoder.py -rulefile nlpregex\samples\sample_input_03.txt -rule "<nt01>" -expand_all_nt
-t01
-out_token1 out_token2
-abc def
-out_token1 out_token2
-t03
-__NOT_ACCEPTED__
-abc def ghi xyz
-out_token1 out_token3 out_token4 out_token2
+$ cat nlpregex\samples\sample_input_03.txt
+<nt01> : [out_token1 ]( t01 | t02 | <nt02> )[out_token2] ;
+<nt02> : abc def ( [out_token3] (ghi xyz) [out_token4] ) ? ;
+$ python3 nlpregex\re_decoder.py -rulefile nlpregex\samples\sample_input_03.txt -rule "<nt01>" -expand_all_nt
+t01                   # <= Input by the user
+out_token1 out_token2 # <= Output by the decoder
+abc def               # <= Input by the user
+out_token1 out_token2 # <= Output by the decoder
+t03                   # <= Input by the user
+__NOT_ACCEPTED__      # <= Output by the decoder
+abc def ghi xyz       # <= Input by the user
+out_token1 out_token3 out_token4 out_token2 # <= Output by the decoder
+$
 ```
 
 # Install
