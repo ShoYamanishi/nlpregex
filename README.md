@@ -5,7 +5,21 @@ Regular Language Representation Converter, Visualizer, and Decoder &amp; Accepto
 
 <a href="docs/banner.png"> <img src="docs/banner.png"></a>
 
+# Highlights
+
+* Closed regular language represntation eco-system
+
+* Automatic generation of RE from a flat list
+
+* Common subexpression detection and reduction
+
+* Visualization of AST, NFA, DFA with Grpahviz
+
+* Decoder &amp; acceptor with enhanced regular expression to include output attributes
+
+
 # Description
+
 Nlpregex is a set of python tools and components to visualize and convert representation
 of regular language.
 It is aimed at speech recognition and natural language processing, 
