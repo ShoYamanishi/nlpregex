@@ -95,28 +95,24 @@ Those common subexpressions are detected and reduced one-by-one in a greedy mann
 
 # Conversion from a Flat List to RE
 
+0. Initial input file of a flat list of phrases
 <a href="samples/sample_expanded_04.txt"> <img src="docs/expanded_list.png" height=200 ></a>
 
 1. Parse by Lark LR(1) line parser into a trivial AST.
-
 <a href="samples/flat_list_parsed_rule.txt"> <img src="docs/parsed_lines.png" height=200 ></a>
 
 2. Convert the AST to a trivial lattice NFA 
-
 <a href="samples/flat_list_nfa.svg"> <img src="docs/flat_list_nfa.png" height=200 ></a>
 
 3. Convert the NFA to DFA by OpenFST (determinization and equivalent states reduction)
-
 <a href="samples/flat_list_dfa.svg"> <img src="docs/flat_list_dfa.png" height=200 ></a>
 
 4. Conversion from FA to a single AST (see above)
-
-<a href="samples/sample_auto_generated_single_04.txt"> <img src="docs/auto_generated_single.png" height=700 ></a>
+<a href="samples/sample_auto_generated_single_04.txt"> <img src="docs/auto_generated_single.png" height=350 ></a>
 
 
 5. Reduce the AST to a set of ASTs with nonterminals (see above)
-
-<a href="samples/sample_auto_generated_reduced_04.txt"> <img src="docs/auto_generated_reduced.png" height=400 ></a>
+<a href="samples/sample_auto_generated_reduced_04.txt"> <img src="docs/auto_generated_reduced.png" height=200 ></a>
 
 
 
